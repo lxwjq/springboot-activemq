@@ -69,7 +69,7 @@ public class ActiveMQConfig {
      * 可以通过设置ActiveMQConnectionFactory来定制想要的再次传送策略。
      *
      * @date 2020/9/17 14:22
-     * @author lixiangx@leimingtech.com
+     * @author lixiang
      **/
     @Bean
     public RedeliveryPolicy redeliveryPolicy() {
@@ -111,7 +111,7 @@ public class ActiveMQConfig {
      * 定义一个消息监听器连接工厂，这里定义的是点对点模式的监听器连接工厂
      *
      * @date 2020/9/17 14:54
-     * @author lixiang05@megvii.com
+     * @author lixiang
      **/
     @Bean(name = "queueListener")
     public DefaultJmsListenerContainerFactory jmsQueueListenerContainerFactory(ActiveMQConnectionFactory activeMQConnectionFactory) {
@@ -130,7 +130,7 @@ public class ActiveMQConfig {
      * topoic模式不支持ACK(待确认)
      *
      * @date 2020/9/17 14:54
-     * @author lixiang05@megvii.com
+     * @author lixiang
      **/
     @Bean(name = "topicListener")
     public DefaultJmsListenerContainerFactory jmsTopoicListenerContainerFactory(ActiveMQConnectionFactory activeMQConnectionFactory) {

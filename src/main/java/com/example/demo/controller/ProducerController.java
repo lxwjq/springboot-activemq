@@ -46,7 +46,7 @@ public class ProducerController {
      * @param destination: 发送到的队列
      * @param message:     消息体
      * @date 2020/9/17 14:27
-     * @author lixiang05@megvii.com
+     * @author lixiang
      **/
     private void sendMessage(Destination destination, final String message) {
         jmsTemplate.convertAndSend(destination, message);
