@@ -5,6 +5,7 @@ import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.RedeliveryPolicy;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.command.ActiveMQTopic;
+import org.apache.activemq.pool.PooledConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,6 +48,9 @@ public class ActiveMQConfig {
 
     @Value("${spring.activemq.topic-name}")
     private String topicName;
+
+    @Value("${spring.activemq.pool.max-connections}")
+    private Integer maxConnections;
 
     @Bean(name = "queue")
     public Queue queue() {
@@ -97,11 +101,18 @@ public class ActiveMQConfig {
     }
 
     @Bean
-    public JmsTemplate jmsTemplate(ActiveMQConnectionFactory activeMQConnectionFactory) {
+    public PooledConnectionFactory pooledConnectionFactory(ActiveMQConnectionFactory activeMQConnectionFactory){
+        PooledConnectionFactory pooledConnectionFactory = new PooledConnectionFactory(activeMQConnectionFactory);
+        pooledConnectionFactory.setMaxConnections(maxConnections);
+        return pooledConnectionFactory;
+    }
+
+    @Bean
+    public JmsTemplate jmsTemplate(PooledConnectionFactory pooledConnectionFactory) {
         JmsTemplate jmsTemplate = new JmsTemplate();
         //进行持久化配置 1表示非持久化，2表示持久化
         jmsTemplate.setDeliveryMode(2);
-        jmsTemplate.setConnectionFactory(activeMQConnectionFactory);
+        jmsTemplate.setConnectionFactory(pooledConnectionFactory);
         //客户端签收模式
         jmsTemplate.setSessionAcknowledgeMode(4);
         return jmsTemplate;
@@ -114,9 +125,9 @@ public class ActiveMQConfig {
      * @author lixiang
      **/
     @Bean(name = "queueListener")
-    public DefaultJmsListenerContainerFactory jmsQueueListenerContainerFactory(ActiveMQConnectionFactory activeMQConnectionFactory) {
+    public DefaultJmsListenerContainerFactory jmsQueueListenerContainerFactory(PooledConnectionFactory pooledConnectionFactory) {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-        factory.setConnectionFactory(activeMQConnectionFactory);
+        factory.setConnectionFactory(pooledConnectionFactory);
         //设置连接数
         factory.setConcurrency("1-10");
         //重连间隔时间
@@ -133,9 +144,9 @@ public class ActiveMQConfig {
      * @author lixiang
      **/
     @Bean(name = "topicListener")
-    public DefaultJmsListenerContainerFactory jmsTopoicListenerContainerFactory(ActiveMQConnectionFactory activeMQConnectionFactory) {
+    public DefaultJmsListenerContainerFactory jmsTopoicListenerContainerFactory(PooledConnectionFactory pooledConnectionFactory) {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-        factory.setConnectionFactory(activeMQConnectionFactory);
+        factory.setConnectionFactory(pooledConnectionFactory);
         //设置连接数
         factory.setConcurrency("1-10");
         //重连间隔时间
