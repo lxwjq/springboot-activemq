@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.jms.Destination;
 import javax.jms.Queue;
 import javax.jms.Topic;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 队列消息控制器
@@ -28,9 +29,12 @@ public class ProducerController {
     @Autowired
     private Topic topic;
 
+    private AtomicInteger atomicInteger = new AtomicInteger(0);
+
     @GetMapping("/queue/test")
     public String sendQueue(String str) {
         this.sendMessage(this.queue, str);
+        System.out.println(atomicInteger.incrementAndGet());
         return "success";
     }
 
