@@ -20,6 +20,7 @@ public class TopicConsumerListener {
     @JmsListener(destination = "${spring.activemq.topic-name}", containerFactory = "topicListener")
     public void readActiveQueue(TextMessage text, Session session) {
         try {
+            // 测试git提交权限
             System.out.println("topic接受到：" + text.getText());
             // 使用手动签收模式，需要手动的调用，如果不在catch中调用session.recover()消息只会在重启服务后重发
             text.acknowledge();

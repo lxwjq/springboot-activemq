@@ -25,6 +25,7 @@ public class QueueConsumerListener {
     @JmsListener(destination = "${spring.activemq.queue-name}", containerFactory = "queueListener")
     public void readActiveQueue(TextMessage text, Session session) {
         try {
+            // 测试git提交权限
             System.out.println("queue接受到：" + text.getText());
             // 使用手动签收模式，需要手动的调用，如果不在catch中调用session.recover()消息只会在重启服务后重发
             text.acknowledge();
