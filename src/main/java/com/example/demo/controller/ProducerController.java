@@ -33,12 +33,14 @@ public class ProducerController {
     @GetMapping("/queue/test")
     public String sendQueue(String str) {
         this.sendMessage(this.queue, str);
+        // 测试git提交权限
         System.out.println(atomicInteger.incrementAndGet());
         return "success";
     }
 
     @GetMapping("/topic/test")
     public String sendTopic(String str) {
+        // 测试git提交权限
         this.sendMessage(this.topic, str);
         return "success";
     }
